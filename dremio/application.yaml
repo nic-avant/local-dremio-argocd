@@ -42,25 +42,25 @@ spec:
           value: ClusterIP
         - name: distStorage.aws.authentication
           value: accessKeySecret
-      values: |-
+      values: |
         distStorage:
           aws:
             credentials:
-            accessKey: "admin"
-            secret: "password"
-            extraProperties: |
-            <property>
-              <name>fs.s3a.endpoint</name>
-              <value>play.min.io</value>
-            </property>
-            <property>
-              <name>fs.s3a.path.style.access</name>
-              <value>true</value>
-            </property>
-            <property>
-              <name>dremio.s3.compat</name>
-              <value>true</value>
-            </property>
+              accessKey: "admin"
+              secret: "password"
+              extraProperties: |
+                <property>
+                  <name>fs.s3a.endpoint</name>
+                  <value>play.min.io</value>
+                </property>
+                <property>
+                  <name>fs.s3a.path.style.access</name>
+                  <value>true</value>
+                </property>
+                <property>
+                  <name>dremio.s3.compat</name>
+                  <value>true</value>
+                </property>
   destination:
     namespace: argocd
     name: in-cluster
