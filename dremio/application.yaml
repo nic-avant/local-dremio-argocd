@@ -62,7 +62,7 @@ spec:
               <value>true</value>
             </property>
   destination:
-    namespace: dremio
+    namespace: argocd
     name: in-cluster
   syncPolicy:
     syncOptions:
