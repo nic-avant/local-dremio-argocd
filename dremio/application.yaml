@@ -1,0 +1,72 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dremio
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/dremio/dremio-cloud-tools.git
+    path: charts/dremio_v2
+    targetRevision: HEAD
+    helm:
+      parameters:
+        - name: coordinator.cpu
+          value: '2'
+        - name: coordinator.memory
+          value: '4500'
+        - name: coordinator.volumeSize
+          value: 12Gi
+        - name: distStorage.aws.path
+          value: /dremio/
+        - name: distStorage.aws.bucketName
+          value: openlake
+        - name: distStorage.type
+          value: aws
+        - name: executor.count
+          value: '1'
+        - name: executor.cpu
+          value: '2'
+        - name: zookeeper.count
+          value: '1'
+        - name: executor.memory
+          value: '4500'
+        - name: executor.cloudCache.volumes[0].size
+          value: 10Gi
+        - name: executor.volumeSize
+          value: 12Gi
+        - name: imageTag
+          value: 21.2.0
+        - name: service.type
+          value: ClusterIP
+        - name: distStorage.aws.authentication
+          value: accessKeySecret
+      values: |-
+        distStorage:
+          aws:
+            credentials:
+            accessKey: "admin"
+            secret: "password"
+            extraProperties: |
+            <property>
+              <name>fs.s3a.endpoint</name>
+              <value>play.min.io</value>
+            </property>
+            <property>
+              <name>fs.s3a.path.style.access</name>
+              <value>true</value>
+            </property>
+            <property>
+              <name>dremio.s3.compat</name>
+              <value>true</value>
+            </property>
+  destination:
+    namespace: dremio
+    name: in-cluster
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
